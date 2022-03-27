@@ -19,11 +19,14 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	void RegisterActor(AActor* actor);
-	void RegisterPlayer(AActor* player);
+	void RegisterActor(AActor* Actor);
+	void UnregisterActor(AActor* Actor, bool ReactivateTick = false);
+	void RegisterPlayer(AActor* Player);
+
 
 private:
 	bool Update(float DeltaTime);
+	void SortActors();
 
 private:
 	FDelegateHandle m_TickHandle;

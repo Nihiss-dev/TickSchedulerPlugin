@@ -16,17 +16,27 @@ void UTickSchedulerSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-void UTickSchedulerSubsystem::RegisterActor(AActor* actor)
+void UTickSchedulerSubsystem::RegisterActor(AActor* Actor)
 {
-	actor->SetActorTickEnabled(false);
-	m_RegisteredActors.Add(actor);
+	Actor->SetActorTickEnabled(false);
+	m_RegisteredActors.Add(Actor);
+
+	SortActors();
 }
 
-void UTickSchedulerSubsystem::RegisterPlayer(AActor* player)
+void UTickSchedulerSubsystem::UnregisterActor(AActor* Actor, bool ReactivateTick /* = false*/)
+{
+	m_RegisteredActors.Remove(Actor);
+	Actor->SetActorTickEnabled(ReactivateTick);
+
+	SortActors();
+}
+
+void UTickSchedulerSubsystem::RegisterPlayer(AActor* Player)
 {
 	checkf(m_RegisteredPlayer == nullptr, TEXT("A player is already registered"));
 
-	m_RegisteredPlayer = player;
+	m_RegisteredPlayer = Player;
 }
 
 bool UTickSchedulerSubsystem::Update(float DeltaTime)
@@ -37,4 +47,15 @@ bool UTickSchedulerSubsystem::Update(float DeltaTime)
 		actor->Tick(DeltaTime);
 	}
 	return true;
+}
+
+void UTickSchedulerSubsystem::SortActors()
+{
+	if (!m_RegisteredPlayer)
+		return;
+	m_RegisteredActors.Sort([&](const AActor& A, const AActor& B) {
+		float DistanceA = A.GetDistanceTo(m_RegisteredPlayer);
+		float DistanceB = B.GetDistanceTo(m_RegisteredPlayer);
+		return DistanceA > DistanceB;
+	});
 }
