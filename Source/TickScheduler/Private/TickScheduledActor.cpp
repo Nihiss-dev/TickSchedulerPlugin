@@ -3,7 +3,8 @@
 
 #include "TickScheduledActor.h"
 
-#include "TickScheduler/Public/TickSchedulerSubsystem.h"
+#include "TickSchedulerSubsystem.h"
+#include "ScheduleQueue.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
@@ -25,7 +26,7 @@ void ATickScheduledActor::BeginPlay()
 		if (gameInstance)
 		{
 			UTickSchedulerSubsystem* tickSubsystem = gameInstance->GetSubsystem<UTickSchedulerSubsystem>();
-			tickSubsystem->RegisterActor(this);
+			tickSubsystem->RegisterActor(this, ESchedulePriority::SCHEDULE_PRIORITY_NORMAL);
 		}
 	}
 	

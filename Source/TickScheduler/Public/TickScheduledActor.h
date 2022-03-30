@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ScheduleQueue.h"
 #include "TickScheduledActor.generated.h"
 
 UCLASS()
@@ -25,4 +26,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tick")
 	bool m_UseTickManager = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tick")
+	ESchedulePriority m_SchedulePriority;
 };

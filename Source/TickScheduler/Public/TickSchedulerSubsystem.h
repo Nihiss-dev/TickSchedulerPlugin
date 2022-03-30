@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "ScheduleQueue.h"
 #include "TickSchedulerSubsystem.generated.h"
+
 
 /**
  * 
@@ -19,17 +21,16 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	void RegisterActor(AActor* Actor);
+	void RegisterActor(AActor* Actor, ESchedulePriority SchedulePriority);
 	void UnregisterActor(AActor* Actor, bool ReactivateTick = false);
 	void RegisterPlayer(AActor* Player);
 
 
 private:
 	bool Update(float DeltaTime);
-	void SortActors();
 
 private:
 	FDelegateHandle m_TickHandle;
-	TArray<AActor*> m_RegisteredActors;
-	AActor* m_RegisteredPlayer;
+
+	ScheduleQueue m_Queue;
 };
