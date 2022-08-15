@@ -2,6 +2,7 @@
 
 
 #include "TickSchedulerSubsystem.h"
+#include "TickSchedulerInterface.h"
 
 void UTickSchedulerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -16,16 +17,16 @@ void UTickSchedulerSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-void UTickSchedulerSubsystem::RegisterActor(AActor* Actor, ESchedulePriority SchedulePriority)
+void UTickSchedulerSubsystem::RegisterInterface(ITickSchedulerInterface* toRegister)
 {
-	Actor->SetActorTickEnabled(false);
-	m_Queue.RegisterActor(Actor, SchedulePriority);
+	toRegister->GetActor()->SetActorTickEnabled(false);
+	m_Queue.RegisterInterface(toRegister);
 }
 
-void UTickSchedulerSubsystem::UnregisterActor(AActor* Actor, bool ReactivateTick /* = false*/)
+void UTickSchedulerSubsystem::UnregisterInterface(ITickSchedulerInterface* toUnregister, bool reactivateTick /* = false*/)
 {
-	m_Queue.UnregisterActor(Actor);
-	Actor->SetActorTickEnabled(ReactivateTick);
+	m_Queue.UnregisterInterface(toUnregister);
+	toUnregister->GetActor()->SetActorTickEnabled(reactivateTick);
 }
 
 void UTickSchedulerSubsystem::RegisterPlayer(AActor* Player)

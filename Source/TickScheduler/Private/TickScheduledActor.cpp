@@ -20,16 +20,7 @@ void ATickScheduledActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (m_UseTickManager)
-	{
-		UGameInstance* gameInstance = GetGameInstance();
-		if (gameInstance)
-		{
-			UTickSchedulerSubsystem* tickSubsystem = gameInstance->GetSubsystem<UTickSchedulerSubsystem>();
-			tickSubsystem->RegisterActor(this, ESchedulePriority::SCHEDULE_PRIORITY_NORMAL);
-		}
-	}
-	
+	RegisterToScheduler();
 }
 
 // Called every frame

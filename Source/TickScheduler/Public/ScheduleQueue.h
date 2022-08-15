@@ -6,19 +6,15 @@
 #include "ScheduleQueue.generated.h"
 
 class ATickScheduledActor;
+class ITickSchedulerInterface;
 
 UENUM(BlueprintType)
 enum class ESchedulePriority : uint8
 {
-	SCHEDULE_PRIORITY_LOW,
-	SCHEDULE_PRIORITY_NORMAL,
-	SCHEDULE_PRIORITY_HIGH
-};
-
-struct FScheduledEvent
-{
-	AActor* actor;
-	ESchedulePriority schedulePriority;
+	SCHEDULE_PRIORITY_NONE = 0x00,
+	SCHEDULE_PRIORITY_HIGH = 0x01,
+	SCHEDULE_PRIORITY_NORMAL = 0x02,
+	SCHEDULE_PRIORITY_LOW = 0x04,
 };
 
 /**
@@ -30,13 +26,14 @@ public:
 	ScheduleQueue();
 	~ScheduleQueue();
 
-	void RegisterActor(AActor* Actor, ESchedulePriority SchedulePriority);
-	void UnregisterActor(AActor* Actor);
 	void RegisterPlayer(AActor* Player);
+	void RegisterInterface(ITickSchedulerInterface* toRegister);
+	void UnregisterInterface(ITickSchedulerInterface* toUnregister);
+	void ClearQueue();
 
 	void Update(float DeltaTime);
 
 private:
-	TArray<FScheduledEvent> m_ScheduledEvents;
+	TArray<ITickSchedulerInterface*> m_ScheduledInterface;
 	AActor* m_RegisteredPlayer;
 };

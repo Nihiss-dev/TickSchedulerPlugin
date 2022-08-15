@@ -2,6 +2,7 @@
 
 
 #include "ScheduleQueue.h"
+#include "TickSchedulerInterface.h"
 
 ScheduleQueue::ScheduleQueue()
 {
@@ -11,17 +12,21 @@ ScheduleQueue::~ScheduleQueue()
 {
 }
 
-void ScheduleQueue::RegisterActor(AActor* Actor, ESchedulePriority SchedulePriority)
+void ScheduleQueue::RegisterInterface(ITickSchedulerInterface* toRegister)
 {
-	m_ScheduledEvents.Add({Actor, SchedulePriority});
+	m_ScheduledInterface.Add(toRegister);
+	m_ScheduledInterface.Sort([](const ITickSchedulerInterface& lhs, const ITickSchedulerInterface& rhs)
+	{
+		return lhs.GetSchedulePriority() < rhs.GetSchedulePriority();
+	});
 }
 
-void ScheduleQueue::UnregisterActor(AActor* Actor)
+void ScheduleQueue::UnregisterInterface(ITickSchedulerInterface* toUnregister)
 {
-	m_ScheduledEvents.RemoveAll([&](const FScheduledEvent& event)
+	m_ScheduledInterface.RemoveAllSwap([&](ITickSchedulerInterface* object)
 	{
-		return event.actor == Actor;
-	});
+		return object->GetActor() == toUnregister->GetActor();
+	}, true);
 }
 
 void ScheduleQueue::RegisterPlayer(AActor* Player)
@@ -31,10 +36,15 @@ void ScheduleQueue::RegisterPlayer(AActor* Player)
 	m_RegisteredPlayer = Player;
 }
 
+void ScheduleQueue::ClearQueue()
+{
+	m_ScheduledInterface.Empty();
+}
+
 void ScheduleQueue::Update(float DeltaTime)
 {
-	for (FScheduledEvent scheduleEvent : m_ScheduledEvents)
+	for (ITickSchedulerInterface* interface : m_ScheduledInterface)
 	{
-		scheduleEvent.actor->Tick(DeltaTime);
+		interface->GetActor()->Tick(DeltaTime);
 	}
 }

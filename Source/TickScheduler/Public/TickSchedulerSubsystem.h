@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/GameInstanceSubsystem.h"
 #include "ScheduleQueue.h"
+#include "Subsystems/GameInstanceSubsystem.h"
 #include "TickSchedulerSubsystem.generated.h"
 
 
@@ -21,8 +21,8 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	void RegisterActor(AActor* Actor, ESchedulePriority SchedulePriority);
-	void UnregisterActor(AActor* Actor, bool ReactivateTick = false);
+	void RegisterInterface(ITickSchedulerInterface* toRegister);
+	void UnregisterInterface(ITickSchedulerInterface* toUnregister, bool reactivateTick = false);
 	void RegisterPlayer(AActor* Player);
 
 
