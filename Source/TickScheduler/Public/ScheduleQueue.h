@@ -32,6 +32,10 @@ public:
 	void ClearQueue();
 
 	void Update(float DeltaTime);
+	void SortByPriority();
+	void SortByPriorityReverse();
+	void SortByDistance();
+	void SortByDistanceReverse();
 
 private:
 	TArray<ITickSchedulerInterface*> m_ScheduledInterface;

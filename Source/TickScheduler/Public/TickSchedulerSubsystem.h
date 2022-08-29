@@ -28,7 +28,6 @@ public:
 
 private:
 	bool Update(float DeltaTime);
-
 private:
 	FDelegateHandle m_TickHandle;
 
